@@ -27,6 +27,9 @@ jobs:
       - name: Generate Platform Files
         run: flutter create .
 
+      - name: Fix Android Min SDK Version
+        run: sed -i 's/flutter.minSdkVersion/21/g' android/app/build.gradle
+
       - name: Add Microphone Permission
         run: sed -i '/<application/i \    <uses-permission android:name="android.permission.RECORD_AUDIO"/>' android/app/src/main/AndroidManifest.xml
 
