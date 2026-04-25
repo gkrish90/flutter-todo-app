@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  speech_to_text: ^6.5.1
+  speech_to_text: ^7.3.0
 
 flutter:
   uses-material-design: true
