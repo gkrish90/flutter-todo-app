@@ -95,10 +95,8 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        // The logo section in the AppBar
         title: Row(
           children: const [
-            // Your custom hand symbol logo
             Text('💪🏻', style: TextStyle(fontSize: 28)), 
             SizedBox(width: 12),
             Text("புலிப் பணிகள்", style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
@@ -107,11 +105,14 @@ class _TodoPageState extends State<TodoPage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(2.0),
           child: Container(
-            color: Colors.deepOrangeAccent,
             height: 2.0,
-            boxShadow: [
-              BoxShadow(color: Colors.deepOrangeAccent.withOpacity(0.5), blurRadius: 10, spreadRadius: 2)
-            ],
+            // The fix is here: moving color and boxShadow inside BoxDecoration
+            decoration: BoxDecoration(
+              color: Colors.deepOrangeAccent,
+              boxShadow: [
+                BoxShadow(color: Colors.deepOrangeAccent.withOpacity(0.5), blurRadius: 10, spreadRadius: 2)
+              ],
+            ),
           ),
         ),
       ),
