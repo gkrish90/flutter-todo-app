@@ -12,7 +12,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext c) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "My To Do",
+      title: "Tiger Tasks",
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: Colors.deepOrangeAccent,
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.deepOrangeAccent,
+          secondary: Colors.orange,
+        ),
+      ),
       home: TodoPage()
     );
   }
@@ -26,8 +35,6 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> { 
   final t = TextEditingController();
   List items = [];
-  
-  // Voice recognition variables
   late stt.SpeechToText _speech;
   bool _isListening = false;
 
@@ -65,7 +72,6 @@ class _TodoPageState extends State<TodoPage> {
     save();
   }
 
-  // Voice listening function
   void _listen() async {
     if (!_isListening) {
       bool available = await _speech.initialize();
@@ -75,7 +81,7 @@ class _TodoPageState extends State<TodoPage> {
           onResult: (val) => setState(() {
             t.text = val.recognizedWords;
           }),
-          localeId: 'ta_IN', // Specifically tells the app to listen for Tamil
+          localeId: 'ta_IN',
         );
       }
     } else {
@@ -87,54 +93,112 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext c) {
     return Scaffold(
-      appBar: AppBar(title: Text("My To Do")),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(children: [
-          Text('என் தினசரி பணிகள்'),
-          Row(children: [
-            Expanded(
-              child: TextField(
-                controller: t,
-                decoration: InputDecoration(hintText: 'பணி சேர்க்கவும்')
-              )
-            ),
-            // Microphone Button
-            IconButton(
-              onPressed: _listen,
-              icon: Icon(
-                _isListening ? Icons.mic : Icons.mic_none, 
-                color: _isListening ? Colors.red : null
-              )
-            ),
-            // Add Button
-            IconButton(
-              onPressed: add,
-              icon: Icon(Icons.add_circle)
-            )
-          ]),
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (c, i) => ListTile(
-                leading: Checkbox(
-                  value: items[i]['done'],
-                  onChanged: (val) => toggle(i)
-                ),
-                title: Text(
-                  items[i]['text'],
-                  style: TextStyle(
-                    decoration: items[i]['done'] ? TextDecoration.lineThrough : null
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        // The logo section in the AppBar
+        title: Row(
+          children: const [
+            // Your custom hand symbol logo
+            Text('💪🏻', style: TextStyle(fontSize: 28)), 
+            SizedBox(width: 12),
+            Text("புலிப் பணிகள்", style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          ]
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(2.0),
+          child: Container(
+            color: Colors.deepOrangeAccent,
+            height: 2.0,
+            boxShadow: [
+              BoxShadow(color: Colors.deepOrangeAccent.withOpacity(0.5), blurRadius: 10, spreadRadius: 2)
+            ],
+          ),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.black, Color(0xFF1A0A00)], 
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                border: Border.all(color: Colors.deepOrangeAccent, width: 1.5),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: Colors.deepOrangeAccent.withOpacity(0.2), blurRadius: 8)
+                ]
+              ),
+              child: Row(children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextField(
+                      controller: t,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'பணி சேர்க்கவும்...',
+                        hintStyle: TextStyle(color: Colors.white54),
+                        border: InputBorder.none,
+                      )
+                    ),
                   )
                 ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => del(i)
+                IconButton(
+                  onPressed: _listen,
+                  icon: Icon(
+                    _isListening ? Icons.mic : Icons.mic_none, 
+                    color: _isListening ? Colors.redAccent : Colors.deepOrangeAccent
+                  )
                 ),
+                IconButton(
+                  onPressed: add,
+                  icon: const Icon(Icons.add_box, color: Colors.deepOrangeAccent)
+                )
+              ]),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (c, i) => Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    border: Border(left: BorderSide(color: items[i]['done'] ? Colors.green : Colors.deepOrangeAccent, width: 4)),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: ListTile(
+                    leading: Checkbox(
+                      activeColor: Colors.deepOrangeAccent,
+                      checkColor: Colors.black,
+                      value: items[i]['done'],
+                      onChanged: (val) => toggle(i)
+                    ),
+                    title: Text(
+                      items[i]['text'],
+                      style: TextStyle(
+                        color: items[i]['done'] ? Colors.white38 : Colors.white,
+                        decoration: items[i]['done'] ? TextDecoration.lineThrough : null,
+                        fontWeight: FontWeight.w500
+                      )
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.white54),
+                      onPressed: () => del(i)
+                    ),
+                  )
+                )
               )
             )
-          )
-        ])
+          ])
+        ),
       ),
     );
   }
