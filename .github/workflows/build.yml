@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: Build Signed Flutter APK
 
 on:
   push:
@@ -42,11 +42,19 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build Unsigned APK
         run: flutter build apk --release
 
-      - name: Upload Artifact
+      - name: Generate Production Keystore
+        run: keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias tiger -storepass tiger1234 -keypass tiger1234 -dname "CN=Tiger Tasks, OU=Development, O=Tech, L=Madurai, S=Tamil Nadu, C=IN"
+
+      - name: Sign the APK
+        run: |
+          BUILD_TOOLS_VERSION=$(ls $ANDROID_HOME/build-tools | sort -n | tail -1)
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner sign --ks release.jks --ks-pass pass:tiger1234 --ks-key-alias tiger build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload Signed Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: todo-app-release
+          name: tiger-tasks-signed-app
           path: build/app/outputs/flutter-apk/app-release.apk
