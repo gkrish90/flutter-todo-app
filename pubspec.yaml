@@ -1,5 +1,5 @@
-name: gobi_todo
-description: A new Flutter project.
+name: tiger_tasks
+description: A high-tech daily task manager.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.2.2
   speech_to_text: ^7.3.0
+  intl: ^0.19.0
+  flutter_local_notifications: ^17.1.2
+  timezone: ^0.9.2
 
 flutter:
   uses-material-design: true
