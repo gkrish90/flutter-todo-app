@@ -36,8 +36,13 @@ jobs:
             sed -i 's/flutter.minSdkVersion/21/g' android/app/build.gradle.kts
           fi
 
-      - name: Add Microphone Permission
-        run: sed -i '/<application/i \    <uses-permission android:name="android.permission.RECORD_AUDIO"/>' android/app/src/main/AndroidManifest.xml
+      - name: Add Android Permissions
+        run: |
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.RECORD_AUDIO"/>' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Install dependencies
         run: flutter pub get
